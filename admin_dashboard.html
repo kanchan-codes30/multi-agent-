@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block title %}Admin Panel{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1>🛡️ Admin Panel</h1>
+    <p>Platform-wide overview — visible only to Admin accounts</p>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon">👥</div>
+        <div class="stat-value">{{ stats.total_users }}</div>
+        <div class="stat-label">Total Users</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon">📊</div>
+        <div class="stat-value">{{ stats.total_sessions }}</div>
+        <div class="stat-label">Total Research (All Users)</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon">✅</div>
+        <div class="stat-value">{{ stats.completed }}</div>
+        <div class="stat-label">Completed</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon">📄</div>
+        <div class="stat-value">{{ stats.total_reports }}</div>
+        <div class="stat-label">Reports Generated</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon">🔗</div>
+        <div class="stat-value">{{ stats.total_sources }}</div>
+        <div class="stat-label">Sources Retrieved</div>
+    </div>
+</div>
+
+<div class="section">
+    <h2>👥 All Registered Users</h2>
+    <div class="history-table-wrapper">
+        <table class="history-table">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Joined</th>
+                    <th>Research Count</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in all_users %}
+                <tr>
+                    <td>{{ u.username }}</td>
+                    <td>{{ u.email }}</td>
+                    <td>{% if u.is_admin %}<span class="session-status status-completed">Admin</span>{% else %}<span class="session-status status-pending">User</span>{% endif %}</td>
+                    <td>{{ u.created_at[:10] }}</td>
+                    <td>{{ u.session_count }}</td>
+                    <td>
+                        <a href="{{ url_for('admin_view_user', user_id=u.id) }}" class="btn btn-small">View Research</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="section">
+    <h2>🕐 Recent Research (All Users)</h2>
+    {% if recent_sessions %}
+    <div class="session-list">
+        {% for s in recent_sessions %}
+        <div class="session-item">
+            <div class="session-info">
+                <strong>{{ s.topic }}</strong>
+                <span class="session-date">by {{ s.username }} · {{ s.created_at[:10] }}</span>
+            </div>
+            <div class="session-status status-{{ s.status }}">{{ s.status }}</div>
+            <div class="session-action">
+                {% if s.status == 'completed' %}
+                <a href="{{ url_for('admin_view_report', session_id=s.id) }}" class="btn btn-small">View Report</a>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="empty-state">No research activity on the platform yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

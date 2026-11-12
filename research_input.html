@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}New Research{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1>Start New Research</h1>
+    <p>Enter a topic and let the AI agent team retrieve, summarize, compare and compile a report for you</p>
+</div>
+
+<div class="research-input-card">
+    <form method="POST" action="{{ url_for('research') }}">
+        <div class="form-group">
+            <label for="topic">Research Topic</label>
+            <input type="text" id="topic" name="topic" required autofocus
+                   placeholder="e.g. Artificial Intelligence in Healthcare, Climate Change Policy, Quantum Computing...">
+        </div>
+        <button type="submit" class="btn btn-primary btn-large btn-full">🚀 Start Multi-Agent Research</button>
+    </form>
+
+    <div class="pipeline-preview">
+        <h3>How it works</h3>
+        <div class="pipeline-steps">
+            <div class="pipeline-step">
+                <span class="step-num">1</span>
+                <div><strong>Information Retrieval Agent</strong><p>Gathers data from Wikipedia & web sources</p></div>
+            </div>
+            <div class="pipeline-step">
+                <span class="step-num">2</span>
+                <div><strong>Summarization Agent</strong><p>Condenses each source into key points</p></div>
+            </div>
+            <div class="pipeline-step">
+                <span class="step-num">3</span>
+                <div><strong>Comparison & Analysis Agent</strong><p>Finds agreements & differences across sources</p></div>
+            </div>
+            <div class="pipeline-step">
+                <span class="step-num">4</span>
+                <div><strong>Citation Manager</strong><p>Formats proper references</p></div>
+            </div>
+            <div class="pipeline-step">
+                <span class="step-num">5</span>
+                <div><strong>Report Generation Agent</strong><p>Compiles everything into a structured report</p></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

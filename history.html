@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Research History{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1>Research History</h1>
+    <p>All your past research sessions</p>
+</div>
+
+{% if sessions %}
+<div class="history-table-wrapper">
+    <table class="history-table">
+        <thead>
+            <tr>
+                <th>Topic</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for s in sessions %}
+            <tr>
+                <td>{{ s.topic }}</td>
+                <td><span class="session-status status-{{ s.status }}">{{ s.status }}</span></td>
+                <td>{{ s.created_at[:10] }}</td>
+                <td class="history-actions">
+                    {% if s.status == 'completed' %}
+                    <a href="{{ url_for('view_report', session_id=s.id) }}" class="btn btn-small">View</a>
+                    <a href="{{ url_for('export_report', session_id=s.id, fmt='pdf') }}" class="btn btn-small btn-export">PDF</a>
+                    {% else %}
+                    <a href="{{ url_for('run_research', session_id=s.id) }}" class="btn btn-small">Continue</a>
+                    {% endif %}
+                    <form method="POST" action="{{ url_for('delete_session', session_id=s.id) }}" style="display:inline;" onsubmit="return confirm('Delete this research session?');">
+                        <button type="submit" class="btn btn-small btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<p class="empty-state">No research history yet. <a href="{{ url_for('research') }}">Start your first research</a>.</p>
+{% endif %}
+{% endblock %}

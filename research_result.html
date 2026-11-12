@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block title %}
+Research Results
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <h1>
+        Research Pipeline: {{ research_session.topic }}
+    </h1>
+
+    {% if result.error %}
+
+        <p>
+            Research could not be completed.
+            No fabricated report was generated.
+        </p>
+
+    {% else %}
+
+        <p>
+            Research agents completed their tasks.
+        </p>
+
+    {% endif %}
+
+</div>
+
+
+{% if result.error %}
+
+    <div class="flash flash-danger">
+
+        <strong>Research Error:</strong>
+
+        {{ result.error }}
+
+        <p>
+            Check your internet connection or try a more
+            specific topic. Your existing account and
+            research history remain available.
+        </p>
+
+    </div>
+
+    <a
+        href="{{ url_for('research') }}"
+        class="btn btn-primary"
+    >
+        Try Another Topic
+    </a>
+
+
+{% else %}
+
+
+    <!-- Agent Activity Log -->
+
+    <div class="agent-log-card">
+
+        <h3>Agent Activity Log</h3>
+
+        <div class="log-output">
+
+            {% for line in result.logs %}
+
+                <div class="log-line">
+                    {{ line }}
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+
+    <!-- Research Summary Cards -->
+
+    <div class="result-summary-grid">
+
+        <div class="result-card">
+
+            <h4>Sources Retrieved</h4>
+
+            <p class="big-number">
+                {{ result.sources|length }}
+            </p>
+
+        </div>
+
+
+        <div class="result-card">
+
+            <h4>Text Similarity</h4>
+
+            <p class="big-number">
+
+                {% if result.comparison.avg_similarity is not none %}
+
+                    {{ result.comparison.avg_similarity }}
+
+                {% else %}
+
+                    N/A
+
+                {% endif %}
+
+            </p>
+
+        </div>
+
+
+        <div class="result-card">
+
+            <h4>References</h4>
+
+            <p class="big-number">
+                {{ result.citations|length }}
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- Report Button -->
+
+    <div class="action-bar">
+
+        <a
+            href="{{ url_for('view_report', session_id=research_session.id) }}"
+            class="btn btn-primary btn-large"
+        >
+            View Full Report
+        </a>
+
+    </div>
+
+
+{% endif %}
+
+{% endblock %}

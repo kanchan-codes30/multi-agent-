@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}{{ report.title }}{% endblock %}
+{% block content %}
+{% if admin_view %}
+<div class="flash flash-info">🛡️ Admin view — you are viewing <strong>{{ owner.username }}'s</strong> report ({{ owner.email }})</div>
+{% endif %}
+<div class="page-header">
+    <h1>{{ report.title }}</h1>
+    <p>Topic: {{ research_session.topic }} · Generated {{ report.created_at[:10] }}</p>
+</div>
+
+<div class="export-bar">
+    <a href="{{ url_for('export_report', session_id=research_session.id, fmt='pdf') }}" class="btn btn-export">⬇ Export as PDF</a>
+    <a href="{{ url_for('export_report', session_id=research_session.id, fmt='docx') }}" class="btn btn-export">⬇ Export as DOCX</a>
+    <a href="{{ url_for('export_report', session_id=research_session.id, fmt='txt') }}" class="btn btn-export">⬇ Export as TXT</a>
+</div>
+
+<div class="report-card">
+    <div class="report-content">{{ report.content }}</div>
+</div>
+
+<div class="section">
+    <h2>📌 Per-Source Summaries</h2>
+    <div class="summary-list">
+        {% for s in summaries %}
+        <div class="summary-item">
+            <strong>{{ s.title }}</strong>
+            <p>{{ s.summary_text }}</p>
+            {% if s.url %}<a href="{{ s.url }}" target="_blank" class="source-link">{{ s.url }}</a>{% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% if comparison %}
+<div class="section">
+    <h2>⚖️ Comparative Analysis</h2>
+    <div class="comparison-box">
+        <p>{{ comparison.comparison_text }}</p>
+        <p><strong>Similarities:</strong> {{ comparison.key_similarities }}</p>
+        <p><strong>Differences:</strong></p>
+        <pre>{{ comparison.key_differences }}</pre>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}

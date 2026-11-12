@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}{{ target_user.username }}'s Research{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1>{{ target_user.username }}'s Research History</h1>
+    <p>{{ target_user.email }} · Joined {{ target_user.created_at[:10] }}</p>
+</div>
+
+<a href="{{ url_for('admin_dashboard') }}" class="btn btn-small">← Back to Admin Panel</a>
+
+<div class="section">
+    {% if user_sessions %}
+    <div class="history-table-wrapper">
+        <table class="history-table">
+            <thead>
+                <tr>
+                    <th>Topic</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for s in user_sessions %}
+                <tr>
+                    <td>{{ s.topic }}</td>
+                    <td><span class="session-status status-{{ s.status }}">{{ s.status }}</span></td>
+                    <td>{{ s.created_at[:10] }}</td>
+                    <td>
+                        {% if s.status == 'completed' %}
+                        <a href="{{ url_for('admin_view_report', session_id=s.id) }}" class="btn btn-small">View Report</a>
+                        {% else %}
+                        <span class="empty-state">Not completed</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="empty-state">This user hasn't done any research yet.</p>
+    {% endif %}
+</div>
+{% endblock %}
